@@ -4,6 +4,7 @@ import Logger from "./loggers/Logger";
 import express, { Application, Request, Response, NextFunction } from "express";
 import ApiResponse from "./models/ApiResponse";
 import userRoutes from "./routes/UserRoutes";
+import compression from "compression";
 dotenv.config();
 const app: Application = express();
 
@@ -17,7 +18,7 @@ mongoose
 app.use(express.json());
 import cors from "cors";
 app.use(cors());
-
+app.use(compression());
 app.use("/user", userRoutes);
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: ApiResponse = new ApiResponse({ msg: "Not found" }, 404);
