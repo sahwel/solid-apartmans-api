@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
-import Logger from "./loggers/Logger";
 import express, { Application, Request, Response, NextFunction } from "express";
 import ApiResponse from "./models/ApiResponse";
 import userRoutes from "./routes/UserRoutes";
@@ -12,8 +11,8 @@ const db_uri = process.env.DB_URI;
 
 mongoose
   .connect(db_uri || "")
-  .then(() => Logger.info("connected to db!"))
-  .catch((err: Error) => Logger.error(err.message));
+  .then(() => console.info("connected to db!"))
+  .catch((err: Error) => console.error(err.message));
 
 app.use(express.json());
 import cors from "cors";
@@ -36,7 +35,7 @@ app.use((error: ApiResponse, req: Request, res: Response, next: NextFunction) =>
 });
 
 app.listen(process.env.PORT || 8080, () => {
-  Logger.info(`Server started at host: 'port: ${process.env.HOST}: ${process.env.PORT || 8080}'`);
+  console.info(`Server started at host: 'port: ${process.env.HOST}: ${process.env.PORT || 8080}'`);
 });
 
 declare global {
