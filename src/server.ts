@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import express, { Application, Request, Response, NextFunction } from "express";
 import ApiResponse from "./models/ApiResponse";
-import userRoutes from "./routes/UserRoutes";
+import adminRoutes from "./routes/AdminRoutes";
 import compression from "compression";
 dotenv.config();
 const app: Application = express();
@@ -16,9 +16,10 @@ mongoose
 
 app.use(express.json());
 import cors from "cors";
+import { AdminModel } from "./interfaces/Admin/AdminDtos";
 app.use(cors());
 app.use(compression());
-app.use("/user", userRoutes);
+app.use("/admin", adminRoutes);
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: ApiResponse = new ApiResponse({ msg: "Not found" }, 404);
   next(error);
@@ -35,14 +36,18 @@ app.use((error: ApiResponse, req: Request, res: Response, next: NextFunction) =>
 });
 
 app.listen(process.env.PORT || 8080, () => {
-  console.info(`Server started at host: 'port: ${process.env.HOST}: ${process.env.PORT || 8080}'`);
+  console.info(
+    `Server started at host: environment: ${process.env.NODE_ENV} host: ${process.env.HOST} port: ${
+      process.env.PORT || 8080
+    }`
+  );
 });
 
 declare global {
   namespace Express {
     interface Request {
-      userId?: string /* 
-      user?: UserModel; */;
+      adminId?: string;
+      admin?: AdminModel;
     }
   }
 }
