@@ -5,7 +5,7 @@ import multer from "multer";
 class MulterSerivce {
   storage = multer.diskStorage({
     destination: (req: Request, file: Express.Multer.File, cb: Function) => {
-      cb(null, __dirname + "/uploads/");
+      cb(null, "./uploads/");
     },
     filename: (req: Request, file: Express.Multer.File, cb: Function) => {
       cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);

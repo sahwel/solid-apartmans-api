@@ -24,7 +24,7 @@ app.use(cors());
 
 app.use(compression());
 
-app.use("/uploads", express.static(__dirname + "/uploads"));
+app.use("/uploads", express.static("uploads"));
 app.use("/admin", adminRoutes);
 app.use("/faq", faqRoutes);
 app.use("/facility", facilityRoutes);
