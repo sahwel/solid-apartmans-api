@@ -18,10 +18,5 @@
                 "DELETE"
             ]
         }
-    ],
-    "functions": {
-        "*": {
-            "includeFiles": "uploads/**"
-        }
-    }
+    ]
 }
