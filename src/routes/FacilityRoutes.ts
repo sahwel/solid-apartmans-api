@@ -9,7 +9,7 @@ router.post("/", function (req, res) {
   asd(req, res, function (err) {
     if (err) {
       // An error occurred when uploading
-      return;
+      return res.json(err);
     }
 
     // Everything went fine
