@@ -18,12 +18,12 @@ class FaqService implements FAQCRUD {
   async get(req: Request) {
     try {
       let lang = req.headers["accept-language"]?.toLowerCase();
-      if (lang === "hu" || lang === "hu-HU") lang = "Hu";
-      if (!lang || lang === "en" || lang === "en-US") lang = "En";
+      if (lang === "hu" || lang === "hu-HU") lang = "HU";
+      if (!lang || lang === "en" || lang === "en-US") lang = "EN";
       const faqs = await Faq.find().select(`question${lang} answer${lang}`);
       const mappedFaqs = faqs.map((el) => ({
-        question: lang === "Hu" ? el.questionHu : el.questionEn,
-        answer: lang === "Hu" ? el.answerHu : el.answerEn,
+        question: lang === "HU" ? el.questionHU : el.questionEN,
+        answer: lang === "HU" ? el.answerHU : el.answerEN,
       }));
       return new ApiResponse({ faqs: mappedFaqs });
     } catch (error) {
@@ -61,7 +61,7 @@ class FaqService implements FAQCRUD {
           400
         );
 
-      await Faq.updateOne({ id: id }, { ...data });
+      await Faq.updateOne({ _id: id }, { ...data });
       return new ApiResponse();
     } catch (error) {
       throw error;

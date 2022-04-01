@@ -3,3 +3,8 @@ export const stringRequired = {
   required: true,
   trim: true,
 };
+
+export const numberRequired = {
+  type: Number,
+  required: true,
+};

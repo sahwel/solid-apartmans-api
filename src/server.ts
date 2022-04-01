@@ -4,6 +4,7 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import ApiResponse from "./models/ApiResponse";
 import adminRoutes from "./routes/AdminRoutes";
 import faqRoutes from "./routes/FaqRoutes";
+import facilityRoutes from "./routes/FacilityRoutes";
 import compression from "compression";
 import cors from "cors";
 import { AdminModel } from "./interfaces/Admin/Definitions";
@@ -23,8 +24,10 @@ app.use(cors());
 
 app.use(compression());
 
+app.use("/uploads", express.static("uploads"));
 app.use("/admin", adminRoutes);
 app.use("/faq", faqRoutes);
+app.use("/facility", facilityRoutes);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: ApiResponse = new ApiResponse({ msg: "Not found" }, 404);

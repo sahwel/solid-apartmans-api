@@ -17,7 +17,6 @@ const adminSchema = new mongoose.Schema<AdminModel>({
   name: {
     ...stringRequired,
     min: 6,
-    unique: true,
     max: 128,
   },
 });

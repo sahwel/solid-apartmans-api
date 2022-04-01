@@ -1,8 +1,8 @@
 export interface FaqModel {
-  questionHu: string;
-  questionEn: string;
-  answerHu: string;
-  answerEn: string;
+  questionHU: string;
+  questionEN: string;
+  answerHU: string;
+  answerEN: string;
 }
 
 export interface FaqDto extends FaqModel {}

@@ -3,29 +3,25 @@ import { stringRequired } from "../../helpers/definitions/modelDefinitions";
 import { FaqModel } from "../../interfaces/Faq/FaqDtos";
 
 const faqSchema = new mongoose.Schema<FaqModel>({
-  answerEn: {
+  answerEN: {
     ...stringRequired,
     min: 1,
     max: 1024,
-    required: true,
   },
-  answerHu: {
+  answerHU: {
     ...stringRequired,
     min: 1,
     max: 1024,
-    required: true,
   },
-  questionEn: {
+  questionEN: {
     ...stringRequired,
     min: 1,
     max: 256,
-    required: true,
   },
-  questionHu: {
+  questionHU: {
     ...stringRequired,
     min: 1,
     max: 256,
-    required: true,
   },
 });
 export default mongoose.model<FaqModel>("Faq", faqSchema);
