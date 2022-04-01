@@ -9,7 +9,7 @@ import registerAdminValidation from "../validation/Admin/AdminRegisterValidation
 class AdminServices implements ADMINCRUD {
   async login(loginData: LoginAdminDto) {
     try {
-      const admin = await Admin.findOne({ name: loginData.email });
+      const admin = await Admin.findOne({ email: loginData.email });
       if (!admin) return new ApiResponse({ msg: "Helytelen email cím vagy jelszó!" }, 400);
 
       const validPassword = await bcrypt.compare(loginData.password, admin.password);
