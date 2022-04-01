@@ -7,7 +7,7 @@ class MulterSerivce {
     destination: (req: Request, file: Express.Multer.File, cb: Function) => {
       console.log("test");
 
-      cb(null, "./uploads/");
+      cb(null, "./.output/");
     },
     filename: (req: Request, file: Express.Multer.File, cb: Function) => {
       cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
