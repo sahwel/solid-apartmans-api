@@ -5,9 +5,7 @@ import multer from "multer";
 class MulterSerivce {
   storage = multer.diskStorage({
     destination: (req: Request, file: Express.Multer.File, cb: Function) => {
-      console.log("test");
-
-      cb(null, "./.output/");
+      cb(null, __dirname + "/uploads/");
     },
     filename: (req: Request, file: Express.Multer.File, cb: Function) => {
       cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
@@ -33,3 +31,5 @@ class MulterSerivce {
 }
 
 export default new MulterSerivce();
+
+//solid-apartmans-api.vercel.app/facility/
