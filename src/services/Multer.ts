@@ -5,6 +5,8 @@ import multer from "multer";
 class MulterSerivce {
   storage = multer.diskStorage({
     destination: (req: Request, file: Express.Multer.File, cb: Function) => {
+      console.log("test");
+
       cb(null, "./uploads/");
     },
     filename: (req: Request, file: Express.Multer.File, cb: Function) => {
