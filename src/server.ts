@@ -3,7 +3,10 @@ import * as dotenv from "dotenv";
 import express, { Application, Request, Response, NextFunction } from "express";
 import ApiResponse from "./models/ApiResponse";
 import adminRoutes from "./routes/AdminRoutes";
+import faqRoutes from "./routes/FaqRoutes";
 import compression from "compression";
+import cors from "cors";
+import { AdminModel } from "./interfaces/Admin/Definitions";
 dotenv.config();
 const app: Application = express();
 
@@ -15,11 +18,14 @@ mongoose
   .catch((err: Error) => console.error(err.message));
 
 app.use(express.json());
-import cors from "cors";
-import { AdminModel } from "./interfaces/Admin/AdminDtos";
+
 app.use(cors());
+
 app.use(compression());
+
 app.use("/admin", adminRoutes);
+app.use("/faq", faqRoutes);
+
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: ApiResponse = new ApiResponse({ msg: "Not found" }, 404);
   next(error);

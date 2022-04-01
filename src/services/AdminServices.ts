@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import ApiResponse from "../models/ApiResponse";
 import jwt from "jsonwebtoken";
 import registerAdminValidation from "../validation/Admin/AdminRegisterValidation";
+import { TokenModel } from "../interfaces/Admin/Definitions";
 
 class AdminServices implements ADMINCRUD {
   async login(loginData: LoginAdminDto) {

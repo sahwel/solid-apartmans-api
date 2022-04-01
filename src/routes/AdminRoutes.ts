@@ -1,4 +1,4 @@
-import { json, Request, Response, Router } from "express";
+import { Router } from "express";
 import AdminController from "../controller/AdminController";
 const router = Router();
 

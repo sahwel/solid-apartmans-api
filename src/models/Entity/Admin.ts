@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { stringRequired } from "../../definitions/modelDefinitions";
-import { AdminModel } from "../../interfaces/Admin/AdminDtos";
+import { stringRequired } from "../../helpers/definitions/modelDefinitions";
+import { AdminModel } from "../../interfaces/Admin/Definitions";
 
 const adminSchema = new mongoose.Schema<AdminModel>({
   email: {

@@ -10,10 +10,3 @@ export interface RegisterAdminDto {
   name: string;
 }
 
-export interface AdminModel {
-  _id: string;
-  email: string;
-  password: string;
-  name: string;
-  save: Function;
-}
