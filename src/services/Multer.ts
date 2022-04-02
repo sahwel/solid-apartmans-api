@@ -1,11 +1,11 @@
-import { Request } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import multer from "multer";
 
 class MulterSerivce {
   storage = multer.diskStorage({
     destination: (req: Request, file: Express.Multer.File, cb: Function) => {
-      cb(null, ".public/");
+      cb(null, "./uploads/");
     },
     filename: (req: Request, file: Express.Multer.File, cb: Function) => {
       cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
@@ -28,6 +28,15 @@ class MulterSerivce {
     },
     fileFilter: this.fileFilter,
   });
+
+  uploadImage = (req: Request, res: Response, next: NextFunction) => {
+    try {
+      this.upload.single("file");
+      next();
+    } catch (error) {
+      return res.json({ error });
+    }
+  };
 }
 
 export default new MulterSerivce();

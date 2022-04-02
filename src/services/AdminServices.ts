@@ -24,9 +24,9 @@ class AdminServices implements ADMINCRUD {
       const token = jwt.sign(
         {
           _id: admin._id,
-          expire: expireDate,
         },
-        process.env.ADMIN_TOKEN
+        process.env.ADMIN_TOKEN,
+        { expiresIn: "12h" }
       );
       return new ApiResponse({
         token: token,

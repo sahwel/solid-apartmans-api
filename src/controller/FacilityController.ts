@@ -24,7 +24,7 @@ class FacilityController {
 
   async delete(req: Request, res: Response) {
     try {
-      const id = req.params.id
+      const id = req.params.id;
       const apiResponse = await facilityService.delete(id);
       res.status(apiResponse.status).json(apiResponse.payload);
     } catch (error) {

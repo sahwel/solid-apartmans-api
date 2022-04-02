@@ -8,5 +8,5 @@ export interface AdminModel {
 
 export interface TokenModel {
   _id: string;
-  expire: Date;
+  exp: Date;
 }

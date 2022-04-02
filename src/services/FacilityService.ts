@@ -10,13 +10,15 @@ class FacilityServices implements FacilityCrud {
     try {
       if (!id) return new ApiResponse({ msg: "Param id is required! (Az id paraméter kötlelező)!" });
       const dataValidation = validateFacility(data);
-      if (dataValidation.error)
+      if (dataValidation.error) {
+        if (img) unlink(img.path, function (err) {});
         return new ApiResponse(
           {
             msg: dataValidation.error.details[0].message,
           },
           400
         );
+      }
 
       if (!img) {
         await Facility.updateOne({ _id: id }, { nameEN: data.nameEN, nameHU: data.nameHU });
@@ -26,6 +28,7 @@ class FacilityServices implements FacilityCrud {
       await Facility.updateOne({ _id: id }, { url: img.path, nameEN: data.nameEN, nameHU: data.nameHU });
       return new ApiResponse();
     } catch (error) {
+      if (img) unlink(img.path, function (err) {});
       throw error;
     }
   }
@@ -51,13 +54,16 @@ class FacilityServices implements FacilityCrud {
   async create(data: FacilityDto, img?: Express.Multer.File) {
     try {
       const dataValidation = validateFacility(data);
-      if (dataValidation.error)
+      if (dataValidation.error) {
+        if (img) unlink(img.path, function (err) {});
+
         return new ApiResponse(
           {
             msg: dataValidation.error.details[0].message,
           },
           400
         );
+      }
 
       if (!img)
         return new ApiResponse({
@@ -67,6 +73,7 @@ class FacilityServices implements FacilityCrud {
       await Facility.create({ url: img.path, nameEN: data.nameEN, nameHU: data.nameHU });
       return new ApiResponse();
     } catch (error) {
+      if (img) unlink(img.path, function (err) {});
       throw error;
     }
   }
