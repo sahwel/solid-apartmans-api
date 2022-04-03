@@ -20,7 +20,7 @@ mongoose
 
 app.use(express.json());
 
-var allowedOrigins = ["https://solid-apartmans.vercel.app/", undefined];
+/* var allowedOrigins = ["https://solid-apartmans.vercel.app/", undefined];
 var corsOptions = {
   origin: function (origin: any, callback: Function) {
     console.log(origin);
@@ -32,7 +32,7 @@ var corsOptions = {
     }
   },
 };
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); */
 
 app.use(compression());
 
