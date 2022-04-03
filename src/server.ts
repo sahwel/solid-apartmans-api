@@ -20,7 +20,7 @@ mongoose
 
 app.use(express.json());
 
-app.use(cors({ origin: "https://solid-apartmans.vercel.app/" }));
+app.use(cors());
 
 app.use(compression());
 
