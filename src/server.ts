@@ -23,6 +23,8 @@ app.use(express.json());
 var allowedOrigins = ["https://solid-apartmans.vercel.app/", undefined];
 var corsOptions = {
   origin: function (origin: any, callback: Function) {
+    console.log(origin);
+
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
