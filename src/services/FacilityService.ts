@@ -80,7 +80,7 @@ class FacilityServices implements FacilityCrud {
 
   async getAll() {
     try {
-      const assets = await Facility.find();
+      const assets = await Facility.find().select("-__v");
       const result = assets.map((el) => ({ _id: el._id, name: el.nameHU, url: el.url }));
       return new ApiResponse(result);
     } catch (error) {

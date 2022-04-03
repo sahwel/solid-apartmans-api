@@ -8,24 +8,18 @@ import createEditFaqValidation from "../validation/Faq/CreateEditFaqValidation";
 class FaqService implements FAQCRUD {
   async getAdmin() {
     try {
-      const faqs = await Faq.find();
+      const faqs = await Faq.find().select("-__v");
       return new ApiResponse({ faqs });
     } catch (error) {
       throw error;
     }
   }
 
-  async get(req: Request) {
+  async get() {
     try {
-      let lang = req.headers["accept-language"]?.toLowerCase();
-      if (lang === "hu" || lang === "hu-HU") lang = "HU";
-      if (!lang || lang === "en" || lang === "en-US") lang = "EN";
-      const faqs = await Faq.find().select(`question${lang} answer${lang}`);
-      const mappedFaqs = faqs.map((el) => ({
-        question: lang === "HU" ? el.questionHU : el.questionEN,
-        answer: lang === "HU" ? el.answerHU : el.answerEN,
-      }));
-      return new ApiResponse({ faqs: mappedFaqs });
+      const faqs = await Faq.find().select("-__v");
+
+      return new ApiResponse(faqs);
     } catch (error) {
       throw error;
     }

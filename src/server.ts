@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import express, { Application, Request, Response, NextFunction } from "express";
 import ApiResponse from "./models/ApiResponse";
 import adminRoutes from "./routes/AdminRoutes";
+import apartmentRoutes from "./routes/ApartmentRoutes";
 import faqRoutes from "./routes/FaqRoutes";
 import facilityRoutes from "./routes/FacilityRoutes";
 import compression from "compression";
@@ -18,6 +19,8 @@ mongoose
   .then(() => console.info("connected to db!"))
   .catch((err: Error) => console.error(err.message));
 
+require("./models/Entity/Review");
+require("./models/Entity/Facility");
 app.use(express.json());
 
 app.use(cors({ origin: "*" }));
@@ -28,6 +31,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/admin", adminRoutes);
 app.use("/faq", faqRoutes);
 app.use("/facility", facilityRoutes);
+app.use("/apartment", apartmentRoutes);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: ApiResponse = new ApiResponse({ msg: "Not found" }, 404);
@@ -46,9 +50,7 @@ app.use((error: ApiResponse, req: Request, res: Response, next: NextFunction) =>
 
 app.listen(process.env.PORT || 8080, () => {
   console.info(
-    `Server started at host: environment: ${process.env.NODE_ENV} host: ${process.env.HOST} port: ${
-      process.env.PORT || 8080
-    }`
+    `Server started. Environment: ${process.env.NODE_ENV}, host: ${process.env.HOST}, port: ${process.env.PORT || 8080}`
   );
 });
 

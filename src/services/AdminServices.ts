@@ -10,7 +10,7 @@ import { TokenModel } from "../interfaces/Admin/Definitions";
 class AdminServices implements ADMINCRUD {
   async login(loginData: LoginAdminDto) {
     try {
-      const admin = await Admin.findOne({ email: loginData.email });
+      const admin = await Admin.findOne({ email: loginData.email }).select("-__v");
       if (!admin) return new ApiResponse({ msg: "Helytelen email cím vagy jelszó!" }, 400);
 
       const validPassword = await bcrypt.compare(loginData.password, admin.password);
