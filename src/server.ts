@@ -20,11 +20,17 @@ mongoose
 
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+var allowedOrigins = ["https://solid-apartmans.vercel.app/", undefined];
+var corsOptions = {
+  origin: function (origin: any, callback: Function) {
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Operation not allowed"));
+    }
+  },
+};
+app.use(cors(corsOptions));
 
 app.use(compression());
 
