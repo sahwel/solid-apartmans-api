@@ -1,3 +1,4 @@
+import { string } from "joi";
 import mongoose from "mongoose";
 import { numberRequired, stringRequired } from "../../helpers/definitions/modelDefinitions";
 import { Address, ApartmentModel } from "../../interfaces/Apartment/Definitions";
@@ -71,6 +72,11 @@ const apartmentSchema = new mongoose.Schema<ApartmentModel>({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Review",
       required: true,
+    },
+  ],
+  images: [
+    {
+      ...stringRequired,
     },
   ],
 });

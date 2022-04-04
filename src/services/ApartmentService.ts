@@ -62,7 +62,10 @@ class ApartmentService implements ApartmentCrud {
   async get(id: string) {
     try {
       if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
-      const apartment = await Apartment.findById(id).select("-__v"); // todo: -reservations if it will exits
+      const apartment = await Apartment.findById(id)
+        .select("-__v") // todo: -reservations if it will exits
+        .populate({ path: "facilities", select: "-__v -_id" })
+        .populate({ path: "reviews", select: "-__v -_id" });
       if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
       return new ApiResponse(apartment);
     } catch (error) {
@@ -78,12 +81,14 @@ class ApartmentService implements ApartmentCrud {
         .populate({ path: "reviews", select: "stars" });
 
       const mappedApartments = apartments.map((e) => ({
+        id: e._id,
         name: e.name,
         address: { ...e.address },
         capacity: { ...e.capacity },
         price: e.price,
         plusPrice: e.plusPrice,
-        reviews: e.reviews.reduce((partialSum, a) => partialSum + a.stars, 0),
+        stars: e.reviews.reduce((partialSum, a) => partialSum + a.stars, 0),
+        image: e.images[0],
         facilities: e.facilities,
       }));
 

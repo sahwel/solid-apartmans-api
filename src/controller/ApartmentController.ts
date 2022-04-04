@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 class AdminController {
   async create(req: Request, res: Response) {
     try {
+      
       const response = await apartmentService.create(req.body, req.files as Express.Multer.File[]);
       res.status(response.status).json(response.payload);
     } catch (error) {
