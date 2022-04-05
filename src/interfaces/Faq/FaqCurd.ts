@@ -6,6 +6,5 @@ export interface FAQCRUD {
   create: (data: FaqDto) => Promise<ApiResponse>;
   update: (id: string, data: FaqDto) => Promise<ApiResponse>;
   delete: (id: string) => Promise<ApiResponse>;
-  getAdmin: () => Promise<ApiResponse>;
   get: () => Promise<ApiResponse>;
 }

@@ -6,15 +6,6 @@ import Faq from "../models/Entity/Faq";
 import createEditFaqValidation from "../validation/Faq/CreateEditFaqValidation";
 
 class FaqService implements FAQCRUD {
-  async getAdmin() {
-    try {
-      const faqs = await Faq.find().select("-__v");
-      return new ApiResponse({ faqs });
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async get() {
     try {
       const faqs = await Faq.find().select("-__v");
@@ -36,8 +27,8 @@ class FaqService implements FAQCRUD {
           400
         );
 
-      await Faq.create({ ...data });
-      return new ApiResponse();
+      const faq = await Faq.create({ ...data });
+      return new ApiResponse(faq._id);
     } catch (error) {
       throw error;
     }

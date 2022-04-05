@@ -51,7 +51,9 @@ class ApartmentService implements ApartmentCrud {
   async getAdmin(id: string) {
     try {
       if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
-      const apartment = await Apartment.findById(id).select("-__v");
+      const apartment = await Apartment.findById(id).select("-__v").populate({ path: "facilities", select: "-__v" });
+      console.log(apartment);
+
       if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
       return new ApiResponse(apartment);
     } catch (error) {

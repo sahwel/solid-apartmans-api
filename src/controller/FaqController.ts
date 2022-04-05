@@ -11,16 +11,6 @@ class FaqController {
     }
   }
 
-  async getAdmin(req: Request, res: Response) {
-    try {
-      const response = await FaqService.getAdmin();
-      res.status(response.status).json(response.payload);
-    } catch (error) {
-      //Logger.error(error);
-      res.json(error);
-    }
-  }
-
   async get(req: Request, res: Response) {
     try {
       const response = await FaqService.get();

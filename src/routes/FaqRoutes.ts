@@ -10,8 +10,6 @@ router.patch("/:id", validateAdminToken, getAdmin, FaqController.update);
 
 router.get("/", FaqController.get);
 
-router.get("/admin", validateAdminToken, getAdmin, FaqController.getAdmin);
-
 router.delete("/:id", validateAdminToken, getAdmin, FaqController.delete);
 
 export default router;
