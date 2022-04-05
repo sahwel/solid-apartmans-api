@@ -83,7 +83,7 @@ class ApartmentService implements ApartmentCrud {
         .populate({ path: "reviews", select: "stars" });
 
       const mappedApartments = apartments.map((e) => ({
-        id: e._id,
+        _id: e._id,
         name: e.name,
         address: { ...e.address },
         capacity: { ...e.capacity },
