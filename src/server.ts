@@ -5,6 +5,7 @@ import ApiResponse from "./models/ApiResponse";
 import adminRoutes from "./routes/AdminRoutes";
 import apartmentRoutes from "./routes/ApartmentRoutes";
 import faqRoutes from "./routes/FaqRoutes";
+import path from "path";
 import facilityRoutes from "./routes/FacilityRoutes";
 import compression from "compression";
 import cors from "cors";
@@ -27,7 +28,9 @@ app.use(cors({ origin: "*" }));
 
 app.use(compression());
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+console.log(__dirname);
+
 app.use("/admin", adminRoutes);
 app.use("/faq", faqRoutes);
 app.use("/facility", facilityRoutes);
