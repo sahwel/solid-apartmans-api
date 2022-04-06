@@ -6,7 +6,7 @@ class FaqController {
       const response = await FaqService.create(req.body);
       res.status(response.status).json(response.payload);
     } catch (error) {
-      //Logger.error(error);
+      console.log(error)
       res.json(error);
     }
   }
@@ -16,7 +16,7 @@ class FaqController {
       const response = await FaqService.get();
       res.status(response.status).json(response.payload);
     } catch (error) {
-      //Logger.error(error);
+      console.log(error)
       res.json(error);
     }
   }
@@ -27,7 +27,7 @@ class FaqController {
       const response = await FaqService.update(id, req.body);
       res.status(response.status).json(response.payload);
     } catch (error) {
-      //Logger.error(error);
+      console.log(error)
       res.json(error);
     }
   }
@@ -38,7 +38,7 @@ class FaqController {
       const response = await FaqService.delete(id);
       res.status(response.status).json(response.payload);
     } catch (error) {
-      //Logger.error(error);
+      console.log(error)
       res.json(error);
     }
   }

@@ -6,7 +6,7 @@ class AdminController {
       const response = await adminServices.login(req.body);
       res.status(response.status).json(response.payload);
     } catch (error) {
-      //Logger.error(error);
+      console.log(error)
       res.json(error);
     }
   }
@@ -15,7 +15,7 @@ class AdminController {
       const apiResponse = await adminServices.register(req.body);
       res.status(apiResponse.status).json(apiResponse.payload);
     } catch (error) {
-      // Logger.error(error);
+      console.log(error)
       res.json(error);
     }
   }

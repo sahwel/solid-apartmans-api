@@ -14,4 +14,5 @@ export interface ApartmentCrud {
   getAdmin: (id: string) => Promise<ApiResponse>;
   get: (id: string) => Promise<ApiResponse>;
   getHome: () => Promise<ApiResponse>;
+  getBookDatas: (id: string) => Promise<ApiResponse>;
 }

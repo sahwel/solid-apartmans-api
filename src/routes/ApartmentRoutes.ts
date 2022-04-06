@@ -11,5 +11,6 @@ router.get("/admin/home", validateAdminToken, getAdmin, ApartmentController.getA
 router.get("/admin/:id", validateAdminToken, getAdmin, ApartmentController.getAdmin);
 router.get("/:id", ApartmentController.get);
 router.get("/", ApartmentController.getHome);
+router.get("/book/datas/:id", ApartmentController.getBookDatas);
 
 export default router;

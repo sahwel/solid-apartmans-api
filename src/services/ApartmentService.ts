@@ -99,6 +99,19 @@ class ApartmentService implements ApartmentCrud {
       throw error;
     }
   }
+
+  async getBookDatas(id: string) {
+    try {
+      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      const apartment = await Apartment.findById(id).select("_id name address ");
+      if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
+      console.log(apartment);
+
+      return new ApiResponse(apartment);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default new ApartmentService();

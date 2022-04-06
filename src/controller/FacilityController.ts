@@ -6,7 +6,7 @@ class FacilityController {
       const response = await facilityService.create(req.body, req.file);
       res.status(response.status).json(response.payload);
     } catch (error) {
-      //Logger.error(error);
+      console.log(error);
       res.json(error);
     }
   }
@@ -17,7 +17,7 @@ class FacilityController {
       const apiResponse = await facilityService.update(id, req.body, req.file);
       res.status(apiResponse.status).json(apiResponse.payload);
     } catch (error) {
-      // Logger.error(error);
+      console.log(error);
       res.json(error);
     }
   }
@@ -28,7 +28,7 @@ class FacilityController {
       const apiResponse = await facilityService.delete(id);
       res.status(apiResponse.status).json(apiResponse.payload);
     } catch (error) {
-      // Logger.error(error);
+      console.log(error);
       res.json(error);
     }
   }
@@ -38,7 +38,7 @@ class FacilityController {
       const apiResponse = await facilityService.getAll();
       res.status(apiResponse.status).json(apiResponse.payload);
     } catch (error) {
-      // Logger.error(error);
+      console.log(error);
       res.json(error);
     }
   }
