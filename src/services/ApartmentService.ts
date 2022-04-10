@@ -25,7 +25,7 @@ class ApartmentService implements ApartmentCrud {
           msg: "You must upload an image for an apartment! (Kép feltöltése kötelező egy apartman létrehozásához!)",
         });
 
-      await Apartment.create({ ...data, images: imgs.map((e) => e.path) });
+      await Apartment.create({ ...data, images: imgs.map((e) => "uploads/" + e.filename) });
       return new ApiResponse();
     } catch (error) {
       if (imgs && imgs?.length !== 0) ImageService.deleteImgs(imgs);
@@ -45,7 +45,7 @@ class ApartmentService implements ApartmentCrud {
       if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
 
       imgs.forEach((el) => {
-        apartment.images.push(el.path);
+        apartment.images.push("uploads/" + el.filename);
       });
       await apartment.save();
       return new ApiResponse();

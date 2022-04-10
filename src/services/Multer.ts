@@ -1,16 +1,16 @@
-import { NextFunction, Request, Response } from "express";
-
+import { NextFunction, Request } from "express";
+import path from "path";
 import multer from "multer";
 
 class MulterSerivce {
   storage = multer.diskStorage({
     destination: (req: Request, file: Express.Multer.File, cb: Function) => {
-      console.log(__dirname + "/../uploads");
+      console.log(path.join(__dirname, "../uploads/"));
 
-      cb(null, __dirname + "/../uploads");
+      cb(null, path.join(__dirname, "../uploads/"));
     },
     filename: (req: Request, file: Express.Multer.File, cb: Function) => {
-      cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
+      cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
     },
   });
 
