@@ -13,6 +13,8 @@ import { AdminModel } from "./interfaces/Admin/Definitions";
 dotenv.config();
 const app: Application = express();
 
+//todo: Research: how logging works on vercel, replace all cosnole.log !!!!!
+
 const db_uri = process.env.DB_URI;
 
 mongoose

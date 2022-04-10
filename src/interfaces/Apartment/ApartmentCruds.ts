@@ -10,9 +10,12 @@ export interface FacilityCrud {
 
 export interface ApartmentCrud {
   create: (data: ApartmentDto, imgs?: Express.Multer.File[]) => Promise<ApiResponse>;
+  update: (id: string, data: ApartmentDto) => Promise<ApiResponse>;
   getAdminHome: () => Promise<ApiResponse>;
   getAdmin: (id: string) => Promise<ApiResponse>;
   get: (id: string) => Promise<ApiResponse>;
   getHome: () => Promise<ApiResponse>;
   getBookDatas: (id: string) => Promise<ApiResponse>;
+  addImages: (id: string, imgs?: Express.Multer.File[]) => Promise<ApiResponse>;
+  deleteImage: (id: string, index: number) => Promise<ApiResponse>;
 }

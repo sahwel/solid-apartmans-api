@@ -1,19 +1,16 @@
 import ApiResponse from "../models/ApiResponse";
-import { unlink } from "fs";
 import { ApartmentCrud } from "../interfaces/Apartment/ApartmentCruds";
 import { ApartmentDto } from "../interfaces/Apartment/AparmentDtos";
 import Apartment from "../models/Entity/Apartment";
 import validateApartment from "../validation/Apartment/ValidateApartment";
+import ImageService from "./ImageService";
 
 class ApartmentService implements ApartmentCrud {
   async create(data: ApartmentDto, imgs?: Express.Multer.File[]) {
     try {
       const dataValidation = validateApartment(data);
       if (dataValidation.error) {
-        if (imgs && imgs.length !== 0)
-          imgs.forEach((img) => {
-            unlink(img.path, function (err) {});
-          });
+        if (imgs && imgs.length !== 0) ImageService.deleteImgs(imgs);
 
         return new ApiResponse(
           {
@@ -25,16 +22,54 @@ class ApartmentService implements ApartmentCrud {
 
       if (!imgs || imgs.length === 0)
         return new ApiResponse({
-          msg: "You must upload an image for an apartment! (Kép feltöltése kötelező egy apartman létrehozásához!",
+          msg: "You must upload an image for an apartment! (Kép feltöltése kötelező egy apartman létrehozásához!)",
         });
 
       await Apartment.create({ ...data, images: imgs.map((e) => e.path) });
       return new ApiResponse();
     } catch (error) {
-      if (imgs && imgs?.length !== 0)
-        imgs.forEach((img) => {
-          unlink(img.path, function (err) {});
+      if (imgs && imgs?.length !== 0) ImageService.deleteImgs(imgs);
+      throw error;
+    }
+  }
+
+  async addImages(id: string, imgs?: Express.Multer.File[]) {
+    try {
+      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      if (!imgs || imgs.length === 0)
+        return new ApiResponse({
+          msg: "Image(s) missing, please upload an image! (Hiányzó kép(ek), kérlek tölts fel legalább egy képet!)",
         });
+
+      const apartment = await Apartment.findById(id).select("images");
+      if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
+
+      imgs.forEach((el) => {
+        apartment.images.push(el.path);
+      });
+      await apartment.save();
+      return new ApiResponse();
+    } catch (error) {
+      if (imgs && imgs?.length !== 0) ImageService.deleteImgs(imgs);
+      throw error;
+    }
+  }
+
+  async update(id: string, data: ApartmentDto) {
+    try {
+      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      const dataValidation = validateApartment(data);
+      if (dataValidation.error)
+        return new ApiResponse(
+          {
+            msg: dataValidation.error.details[0].message,
+          },
+          400
+        );
+
+      await Apartment.updateOne({ _id: id }, { ...data });
+      return new ApiResponse();
+    } catch (error) {
       throw error;
     }
   }
@@ -52,7 +87,6 @@ class ApartmentService implements ApartmentCrud {
     try {
       if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
       const apartment = await Apartment.findById(id).select("-__v").populate({ path: "facilities", select: "-__v" });
-      console.log(apartment);
 
       if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
       return new ApiResponse(apartment);
@@ -105,8 +139,22 @@ class ApartmentService implements ApartmentCrud {
       if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
       const apartment = await Apartment.findById(id).select("_id name address ");
       if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
-      console.log(apartment);
 
+      return new ApiResponse(apartment);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteImage(id: string, index: number) {
+    try {
+      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      const apartment = await Apartment.findById(id).select("images");
+      if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
+      if (index < 0 || index > apartment.images.length - 1)
+        return new ApiResponse({ msg: "Image not found! (Kép nem található!)" }, 404);
+      ImageService.deleteImg(apartment.images[index]);
+      await apartment.save();
       return new ApiResponse(apartment);
     } catch (error) {
       throw error;
