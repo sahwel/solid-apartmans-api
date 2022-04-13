@@ -7,6 +7,7 @@ import apartmentRoutes from "./routes/ApartmentRoutes";
 import faqRoutes from "./routes/FaqRoutes";
 import path from "path";
 import facilityRoutes from "./routes/FacilityRoutes";
+import reservationRoutes from "./routes/ReservationRoutes";
 import compression from "compression";
 import cors from "cors";
 import { AdminModel } from "./interfaces/Admin/Definitions";
@@ -24,6 +25,7 @@ mongoose
 
 require("./models/Entity/Review");
 require("./models/Entity/Facility");
+require("./models/Entity/Reservation");
 app.use(express.json());
 
 app.use(cors({ origin: "*" }));
@@ -36,6 +38,7 @@ console.log(__dirname);
 app.use("/admin", adminRoutes);
 app.use("/faq", faqRoutes);
 app.use("/facility", facilityRoutes);
+app.use("/reservation", reservationRoutes);
 app.use("/apartment", apartmentRoutes);
 
 app.use((req: Request, res: Response, next: NextFunction) => {

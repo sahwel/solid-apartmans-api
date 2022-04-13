@@ -1,3 +1,5 @@
+import { ReservationModel } from "../Reservation.ts/Definitions";
+
 export interface ApartmentModel {
   id: string;
   name: string;
@@ -10,6 +12,7 @@ export interface ApartmentModel {
   detailsEN: string;
   plusPrice: number;
   reviews: Review[];
+  reservations: ReservationModel[];
 }
 
 export interface Address {

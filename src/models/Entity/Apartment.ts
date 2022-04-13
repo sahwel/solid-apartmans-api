@@ -74,6 +74,13 @@ const apartmentSchema = new mongoose.Schema<ApartmentModel>({
       required: true,
     },
   ],
+  reservations: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Reservation",
+      required: true,
+    },
+  ],
   images: [
     {
       ...stringRequired,
