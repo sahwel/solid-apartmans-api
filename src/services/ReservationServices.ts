@@ -6,6 +6,48 @@ import Reservation from "../models/Entity/Reservation";
 import validateReservation from "../validation/Reservation/ReservationValidationt";
 
 class ReservationServices implements ReservationCRUD {
+  async getAdmin(query: any) {
+    try {
+      const apartment = query.apartment;
+      const start = query.start;
+      const end = query.end;
+
+      let queryDB = {};
+      if (apartment) queryDB = { ...queryDB, apartment: apartment };
+      if (start) queryDB = { ...queryDB, arrive: { $gte: setToZero(start) } };
+      if (end) queryDB = { ...queryDB, leave: { $lte: setToZero(end) } };
+      const result = await Reservation.find(queryDB).select("-__v");
+
+      return new ApiResponse({ result });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async get() {
+    try {
+      const dbResult = await Reservation.find({ arrive: { $gte: setToZero(new Date()) } }).select("arrive leave");
+      const result = dbResult; // todo, split into days
+      return new ApiResponse({ result });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getFreeTimeEnd(id: string, query: any) {
+    try {
+      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      const start = query.start;
+      const result = await Reservation.find({ arrive: { $gte: setToZero(start ? start : new Date()) } })
+        .select("arrive")
+        .limit(1);
+
+      return new ApiResponse({ result });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async create(id: string, data: CreateReservationDto) {
     try {
       if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
@@ -22,8 +64,10 @@ class ReservationServices implements ReservationCRUD {
 
       if (!apartment) return new ApiResponse({ msgHU: "Apartman nem található!", msgEN: "Apartment not found" }, 404);
 
-      const newArrive = setToZero(data.arrive);
-      const newLeave = setToZero(data.leave);
+      data.arrive = setToZero(data.arrive);
+      data.leave = setToZero(data.leave);
+      const newArrive = data.arrive;
+      const newLeave = data.leave;
 
       if (!checkArriveDate(newArrive))
         return new ApiResponse({
@@ -76,8 +120,12 @@ class ReservationServices implements ReservationCRUD {
       const isFree = apartment.reservations.every((e) => {
         const arrive = setToZero(e.arrive);
         const leave = setToZero(e.leave);
-        return (newArrive < arrive && newLeave < arrive) || newArrive > newLeave;
+        console.log((newArrive < arrive && newLeave < arrive) || newArrive > leave);
+
+        return (newArrive < arrive && newLeave < arrive) || newArrive > leave;
       });
+      console.log(isFree);
+
       if (!isFree)
         return new ApiResponse(
           {
@@ -103,10 +151,7 @@ class ReservationServices implements ReservationCRUD {
 }
 
 const checkArriveDate = (date: Date) => {
-  const asd = setToZero(new Date());
   if (date <= setToZero(new Date())) return false;
-  console.log(date <= asd);
-
   return true;
 };
 

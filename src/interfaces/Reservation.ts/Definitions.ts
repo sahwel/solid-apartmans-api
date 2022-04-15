@@ -3,6 +3,9 @@ import { ApartmentModel, Review } from "../Apartment/Definitions";
 
 export interface ReservationCRUD {
   create: (id: string, data: CreateReservationDto) => Promise<ApiResponse>;
+  getAdmin: (query: any) => Promise<ApiResponse>;
+  get: () => Promise<ApiResponse>;
+  getFreeTimeEnd: (id: string, query: any) => Promise<ApiResponse>;
 }
 
 export interface CreateReservationDto extends ReservationBaseModel {}
