@@ -8,15 +8,17 @@ import validateReservation from "../validation/Reservation/ReservationValidation
 class ReservationServices implements ReservationCRUD {
   async getAdmin(query: any) {
     try {
-      const apartment = query.apartment;
+      const freeText = query.freeText;
       const start = query.start;
       const end = query.end;
 
       let queryDB = {};
-      if (apartment) queryDB = { ...queryDB, apartment: apartment };
+      if (freeText) queryDB = { ...queryDB, $text: { $search: freeText } };
       if (start) queryDB = { ...queryDB, arrive: { $gte: setToZero(start) } };
       if (end) queryDB = { ...queryDB, leave: { $lte: setToZero(end) } };
-      const result = await Reservation.find(queryDB).select("-__v");
+      console.log(queryDB);
+
+      const result = await Reservation.find(queryDB).select("-__v").populate({ path: "apartment", select: "name" });
 
       return new ApiResponse({ result });
     } catch (error) {
