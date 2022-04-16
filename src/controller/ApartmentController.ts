@@ -97,6 +97,16 @@ class AdminController {
       res.json(error);
     }
   }
+
+  async getApartmentsNames(req: Request, res: Response) {
+    try {
+      const response = await apartmentService.getApartmentsNames();
+      res.status(response.status).json(response.payload);
+    } catch (error) {
+      console.log(error);
+      res.json(error);
+    }
+  }
 }
 
 export default new AdminController();

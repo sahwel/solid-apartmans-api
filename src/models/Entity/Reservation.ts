@@ -37,4 +37,5 @@ const reservationSchema = new mongoose.Schema<ReservationModel>({
     privatePerson: { type: Boolean, required: true, default: false },
   },
 });
+
 export default mongoose.model<ReservationModel>("Reservation", reservationSchema);

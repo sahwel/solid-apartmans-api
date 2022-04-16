@@ -160,6 +160,17 @@ class ApartmentService implements ApartmentCrud {
       throw error;
     }
   }
+
+  async getApartmentsNames() {
+    try {
+      const apartments = await Apartment.find().select("_id name");
+      console.log(apartments);
+
+      return new ApiResponse({ apartments });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default new ApartmentService();

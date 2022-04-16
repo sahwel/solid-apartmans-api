@@ -24,6 +24,7 @@ router.patch(
 router.get("/admin/home", validateAdminToken, getAdmin, ApartmentController.getAdminHome);
 router.get("/admin/:id", validateAdminToken, getAdmin, ApartmentController.getAdmin);
 router.delete("/image/:id/:index", validateAdminToken, getAdmin, ApartmentController.deleteImage);
+router.get("/options", validateAdminToken, getAdmin, ApartmentController.getApartmentsNames);
 router.get("/:id", ApartmentController.get);
 router.get("/", ApartmentController.getHome);
 router.get("/book/datas/:id", ApartmentController.getBookDatas);

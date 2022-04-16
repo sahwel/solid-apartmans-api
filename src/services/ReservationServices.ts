@@ -4,21 +4,35 @@ import ApiResponse from "../models/ApiResponse";
 import Apartment from "../models/Entity/Apartment";
 import Reservation from "../models/Entity/Reservation";
 import validateReservation from "../validation/Reservation/ReservationValidationt";
-
+import { ObjectId } from "mongodb";
 class ReservationServices implements ReservationCRUD {
   async getAdmin(query: any) {
     try {
+      const apartment = new ObjectId(query.apartment);
       const freeText = query.freeText;
       const start = query.start;
       const end = query.end;
 
       let queryDB = {};
-      if (freeText) queryDB = { ...queryDB, $text: { $search: freeText } };
+      if (freeText)
+        queryDB = {
+          ...queryDB,
+          $or: [
+            { "customer.firstName": { $regex: freeText, $options: "i" } },
+            { "customer.lastName": { $regex: freeText, $options: "i" } },
+            { "customer.email": { $regex: freeText, $options: "i" } },
+            { "customer.phone": { $regex: freeText, $options: "i" } },
+            { "customer.companyName": { $regex: freeText, $options: "i" } },
+            { "customer.taxNumber": { $regex: freeText, $options: "i" } },
+            { apartment: apartment as ObjectId },
+          ],
+        };
       if (start) queryDB = { ...queryDB, arrive: { $gte: setToZero(start) } };
       if (end) queryDB = { ...queryDB, leave: { $lte: setToZero(end) } };
-      console.log(queryDB);
 
-      const result = await Reservation.find(queryDB).select("-__v").populate({ path: "apartment", select: "name" });
+      let result = await Reservation.find({ ...queryDB })
+        .select("-__v")
+        .populate({ path: "apartment", select: "name" });
 
       return new ApiResponse({ result });
     } catch (error) {

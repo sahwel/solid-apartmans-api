@@ -18,4 +18,5 @@ export interface ApartmentCrud {
   getBookDatas: (id: string) => Promise<ApiResponse>;
   addImages: (id: string, imgs?: Express.Multer.File[]) => Promise<ApiResponse>;
   deleteImage: (id: string, index: number) => Promise<ApiResponse>;
+  getApartmentsNames: () => Promise<ApiResponse>;
 }
