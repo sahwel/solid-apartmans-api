@@ -8,7 +8,9 @@ export interface ReservationCRUD {
   getFreeTimeEnd: (id: string, query: any) => Promise<ApiResponse>;
 }
 
-export interface CreateReservationDto extends ReservationBaseModel {}
+export interface CreateReservationDto extends ReservationBaseModel {
+  payed: boolean;
+}
 
 export interface ReservationBaseModel {
   arrive: Date;
@@ -39,5 +41,7 @@ export interface ReservationBaseModel {
 
 export interface ReservationModel extends ReservationBaseModel {
   apartment: ApartmentModel;
+  total: Number;
+  payed: boolean;
   review: Review;
 }

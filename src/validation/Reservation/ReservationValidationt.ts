@@ -5,6 +5,7 @@ const validateReservation = (data: CreateReservationDto) => {
   const schema = Joi.object({
     arrive: Joi.required(),
     leave: Joi.required(),
+    payed: Joi.boolean().required(),
     customer: {
       firstName: Joi.string().min(1).max(256).required().trim(),
       lastName: Joi.string().min(1).max(256).required().trim(),

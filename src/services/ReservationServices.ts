@@ -5,6 +5,7 @@ import Apartment from "../models/Entity/Apartment";
 import Reservation from "../models/Entity/Reservation";
 import validateReservation from "../validation/Reservation/ReservationValidationt";
 import { ObjectId } from "mongodb";
+import { ApartmentModel } from "../interfaces/Apartment/Definitions";
 class ReservationServices implements ReservationCRUD {
   async getAdmin(query: any) {
     try {
@@ -76,7 +77,9 @@ class ReservationServices implements ReservationCRUD {
           400
         );
 
-      const apartment = await Apartment.findById(id).select("name reservations").populate("reservations");
+      const apartment = await Apartment.findById(id)
+        .select("name reservations capacity price plusPrice")
+        .populate("reservations");
 
       if (!apartment) return new ApiResponse({ msgHU: "Apartman nem található!", msgEN: "Apartment not found" }, 404);
 
@@ -156,7 +159,11 @@ class ReservationServices implements ReservationCRUD {
           },
           400
         );
-      const newReservation = await Reservation.create({ ...data, apartment: apartment });
+      const newReservation = await Reservation.create({
+        ...data,
+        apartment: apartment,
+        total: getTotal(apartment, newArrive, newLeave, data.customer.numberOfAdults, data.customer.numberOfKids),
+      });
       apartment.reservations.push(newReservation);
       await apartment.save();
       return new ApiResponse();
@@ -174,6 +181,21 @@ const checkArriveDate = (date: Date) => {
 const checkLeaveDate = (arrive: Date, leave: Date) => {
   if (arrive >= leave) return false;
   return true;
+};
+
+const getTotal = (
+  apartment: ApartmentModel,
+  arrive: Date,
+  leave: Date,
+  numbersOfAdults: number,
+  numbersOfChilds: number
+) => {
+  const dayInMillis = 86400000;
+  const ifa = 1.04;
+  let people = numbersOfAdults + numbersOfChilds - 1;
+  let days = (setToZero(leave).getTime() - setToZero(arrive).getTime()) / dayInMillis;
+
+  return days * (apartment.price + apartment.plusPrice * people) * ifa;
 };
 
 export default new ReservationServices();
