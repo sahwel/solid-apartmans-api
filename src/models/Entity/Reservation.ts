@@ -15,7 +15,7 @@ const reservationSchema = new mongoose.Schema<ReservationModel>({
   apartment: { type: mongoose.Schema.Types.ObjectId, ref: "Apartment", required: true },
   review: { type: mongoose.Schema.Types.ObjectId, ref: "Review" },
   total: { ...numberRequired, min: 1 },
-  payed: { type: Boolean, required: true },
+  payed: { type: Boolean, required: true, default: false },
   customer: {
     firstName: { ...stringRequired, min: 1, max: 256 },
     lastName: { ...stringRequired, min: 1, max: 256 },

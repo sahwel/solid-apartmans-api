@@ -41,14 +41,29 @@ class ReservationServices implements ReservationCRUD {
     }
   }
 
-  async get() {
+  async get(apartment: string) {
     try {
-      const dbResult = await Reservation.find({ arrive: { $gte: setToZero(new Date()) } }).select("arrive leave");
-      const result = dbResult; // todo, split into days
+      const dbResult = await Reservation.find({ apartment: apartment, arrive: { $gte: setToZero(new Date()) } }).select(
+        "arrive leave"
+      );
+
+      let result: Date[] = []; // todo, split into days
+      dbResult.forEach((e) => {
+        const dates = this.getDaysArray(e.arrive, e.leave);
+        if (dates instanceof Array) result = result.concat(dates);
+        else result.push(dates);
+      });
       return new ApiResponse({ result });
     } catch (error) {
       throw error;
     }
+  }
+
+  getDaysArray(start: Date | string, end: Date | string) {
+    for (var arr = [], dt = new Date(start); dt <= new Date(end); dt.setDate(dt.getDate() + 1)) {
+      arr.push(new Date(dt));
+    }
+    return arr;
   }
 
   async getFreeTimeEnd(id: string, query: any) {

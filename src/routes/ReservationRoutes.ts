@@ -8,6 +8,7 @@ const router = Router();
 router.post("/:id", ReservationController.makeReservation);
 
 router.get("/admin/", validateAdminToken, getAdmin, ReservationController.getAdmin);
+router.get("/:id", ReservationController.get);
 
 router.get("/freeTimeEnd/:id", validateAdminToken, getAdmin, ReservationController.getFreeTimeEnd);
 
