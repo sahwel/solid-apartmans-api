@@ -89,8 +89,22 @@ class AdminController {
   async deleteImage(req: Request, res: Response) {
     try {
       const id = req.params.id;
-      const index = req.params.id;
+      const index = req.params.index;
       const response = await apartmentService.deleteImage(id, parseInt(index));
+      res.status(response.status).json(response.payload);
+    } catch (error) {
+      console.log(error);
+      res.json(error);
+    }
+  }
+
+  async moveImg(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const index = req.params.index;
+      const isUp = req.params.isUp;
+      const toFirst = req.params.toFirst;
+      const response = await apartmentService.moveImg(id, parseInt(index), isUp === "true", toFirst === "true");
       res.status(response.status).json(response.payload);
     } catch (error) {
       console.log(error);

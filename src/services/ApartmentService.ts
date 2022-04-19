@@ -153,7 +153,42 @@ class ApartmentService implements ApartmentCrud {
       if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
       if (index < 0 || index > apartment.images.length - 1)
         return new ApiResponse({ msg: "Image not found! (Kép nem található!)" }, 404);
+      if (apartment.images.length === 1)
+        return new ApiResponse(
+          {
+            msgEN: "An apartment must need to contains at least 1 image!",
+            msgHU: "Minden apartmannak legalább 1 képet tartalmaznia kell!",
+          },
+          400
+        );
+      apartment.images.splice(index, 1);
       ImageService.deleteImg(apartment.images[index]);
+      await apartment.save();
+      return new ApiResponse(apartment);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async moveImg(id: string, index: number, isUp: boolean, toFirst: boolean) {
+    try {
+      if (!id) return new ApiResponse({ msgEN: "Param id is required!", msgHU: "Paraméter id kötelező!" });
+      const apartment = await Apartment.findById(id).select("images");
+      if (!apartment) return new ApiResponse({ msgEN: "Apartment not found!", msgHU: "Apartman nem találató!" }, 404);
+      if ((isUp || toFirst) && index === 0)
+        return new ApiResponse(
+          { msgEN: "You can't move the first image up!", msgHU: "Nem mozgathatod feljebb az első képet!" },
+          404
+        );
+      if (!isUp && !toFirst && index === apartment.images.length - 1)
+        return new ApiResponse(
+          { msgEN: "You can't move the last image down!", msgHU: "Nem mozgathatod lejebb az utolsó képet!" },
+          404
+        );
+      const oldImg = apartment.images[toFirst ? 0 : index - (isUp ? 1 : -1)];
+      apartment.images[toFirst ? 0 : index - (isUp ? 1 : -1)] = apartment.images[index];
+      apartment.images[index] = oldImg;
+
       await apartment.save();
       return new ApiResponse(apartment);
     } catch (error) {

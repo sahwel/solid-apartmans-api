@@ -9,12 +9,12 @@ const validateAdminToken = (req: Request, res: Response, next: NextFunction) => 
     if (!token)
       return res
         .status(401)
-        .json({ msg: "Access denied, please sign in first! (Hozzáférés megtagadva, jelentkezz be előbb!)" });
+        .json({ msgEN: "Access denied, please sign in first!", msgHU: "Hozzáférés megtagadva, jelentkezz be előbb!" });
 
     const verified = jwt.verify(token, process.env.ADMIN_TOKEN + "");
     const tokenModel = verified as JwtPayload;
 
-    const id = (verified as any)._id;
+    const id = tokenModel._id;
     req.adminId = id;
     next();
   } catch (err) {

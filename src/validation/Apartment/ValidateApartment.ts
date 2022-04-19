@@ -6,7 +6,7 @@ const validateApartment = (data: ApartmentDto) => {
     name: Joi.string().min(1).max(64).required().trim().messages({
       "string.min": "A névnek legalább 1 karakter hosszúnak kell lennie!",
       "string.max": "A név hossza maximum 64 karakter lehet!",
-      "any.required": `"A név mező kötelező!`,
+      "any.required": `A név mező kötelező!`,
     }),
     address: Joi.object()
       .required()
@@ -35,13 +35,15 @@ const validateApartment = (data: ApartmentDto) => {
     capacity: Joi.object()
       .required()
       .keys({
-        bedrooms: Joi.string().min(1).max(128).required().trim().messages({
-          "string.min": "A szobák számának legalább 1 karakter hosszúnak kell lennie!",
+        bedrooms: Joi.number().min(1).max(128).required().messages({
+          "string.min": "A szobák számának legalább 1-nek kell lennie!",
           "any.required": `"A szobák száma kötelező!`,
+          "number.base": "A szobák számának számának kell lennie!",
         }),
-        capacity: Joi.string().min(1).max(32).required().trim().messages({
-          "string.min": "A férőhelyek számának legalább 1 karakter hosszúnak kell lennie!",
+        capacity: Joi.number().min(1).max(32).required().messages({
+          "string.min": "A férőhelyek számának legalább 1-nek kell lennie!",
           "any.required": `"A férőhelyek száma mező kötelező!`,
+          "number.base": "A férőhelyek számának számánakkell lennie!",
         }),
       }),
     detailsEN: Joi.string().min(1).max(1024).required().trim().messages({
