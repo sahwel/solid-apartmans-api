@@ -112,6 +112,17 @@ class AdminController {
     }
   }
 
+  async delete(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const response = await apartmentService.delete(id);
+      res.status(response.status).json(response.payload);
+    } catch (error) {
+      console.log(error);
+      res.json(error);
+    }
+  }
+
   async getApartmentsNames(req: Request, res: Response) {
     try {
       const response = await apartmentService.getApartmentsNames();

@@ -206,6 +206,16 @@ class ApartmentService implements ApartmentCrud {
       throw error;
     }
   }
+
+  async delete(id: string) {
+    try {
+      const apartments = await Apartment.findOneAndDelete({ _id: id });
+
+      return new ApiResponse({ apartments });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default new ApartmentService();

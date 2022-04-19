@@ -23,5 +23,6 @@ router.patch("/image/:id/:index/:isUp/:toFirst", validateAdminToken, getAdmin, A
 router.get("/:id", ApartmentController.get);
 router.get("/", ApartmentController.getHome);
 router.get("/book/datas/:id", ApartmentController.getBookDatas);
+router.delete("/:id", validateAdminToken, getAdmin, ApartmentController.delete);
 
 export default router;
