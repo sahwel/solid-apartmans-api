@@ -9,12 +9,17 @@ import { ApartmentModel } from "../interfaces/Apartment/Definitions";
 class ReservationServices implements ReservationCRUD {
   async getAdmin(query: any) {
     try {
-      const apartment = new ObjectId(query.apartment);
+      let apartment = query.apartment;
       const freeText = query.freeText;
       const start = query.start;
       const end = query.end;
 
       let queryDB = {};
+      if (apartment) {
+        apartment = new ObjectId(apartment);
+        queryDB = { ...queryDB, apartment: apartment as ObjectId };
+      }
+
       if (freeText)
         queryDB = {
           ...queryDB,
@@ -25,15 +30,16 @@ class ReservationServices implements ReservationCRUD {
             { "customer.phone": { $regex: freeText, $options: "i" } },
             { "customer.companyName": { $regex: freeText, $options: "i" } },
             { "customer.taxNumber": { $regex: freeText, $options: "i" } },
-            { apartment: apartment as ObjectId },
           ],
         };
+
       if (start) queryDB = { ...queryDB, arrive: { $gte: setToZero(start) } };
       if (end) queryDB = { ...queryDB, leave: { $lte: setToZero(end) } };
 
       let result = await Reservation.find({ ...queryDB })
         .select("-__v")
-        .populate({ path: "apartment", select: "name" });
+        .populate({ path: "apartment", select: "name" })
+        .sort([["arrive", 1]]);
 
       return new ApiResponse({ result });
     } catch (error) {
@@ -47,7 +53,7 @@ class ReservationServices implements ReservationCRUD {
         "arrive leave"
       );
 
-      let result: Date[] = []; // todo, split into days
+      let result: Date[] = [];
       dbResult.forEach((e) => {
         const dates = this.getDaysArray(e.arrive, e.leave);
         if (dates instanceof Array) result = result.concat(dates);
@@ -66,15 +72,17 @@ class ReservationServices implements ReservationCRUD {
     return arr;
   }
 
-  async getFreeTimeEnd(id: string, query: any) {
+  async getFreeTimeEnd(query: any) {
     try {
-      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
       const start = query.start;
-      const result = await Reservation.find({ arrive: { $gte: setToZero(start ? start : new Date()) } })
+      if (!start)
+        return new ApiResponse({ msgEN: "You must need to specify the arrive date for get the free time end!" });
+      const result = await Reservation.find({ arrive: { $gte: setToZero(start) } })
         .select("arrive")
+        .sort([["arrive", 1]])
         .limit(1);
 
-      return new ApiResponse({ result });
+      return new ApiResponse({ result: result.length === 1 ? result[0].arrive : [] });
     } catch (error) {
       throw error;
     }
@@ -82,7 +90,7 @@ class ReservationServices implements ReservationCRUD {
 
   async create(id: string, data: CreateReservationDto) {
     try {
-      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
       const dataValidation = validateReservation(data);
       if (dataValidation.error)
         return new ApiResponse(
@@ -109,6 +117,12 @@ class ReservationServices implements ReservationCRUD {
           msgEN: "The arrive date is must be after the date of booking",
         });
 
+      if (data.method !== "bank transfer" && data.method !== "credit card")
+        return ApiResponse.withLocalize(
+          "Csak bankkártyás vagy bakni átutalással lehet fizetni",
+          "You can only pay with credit card or you can bank transfer!",
+          400
+        );
       if (!data.customer.privatePerson) {
         if (!data.customer.companyName || data.customer.companyName.length === 0)
           return new ApiResponse({
@@ -154,11 +168,9 @@ class ReservationServices implements ReservationCRUD {
       const isFree = apartment.reservations.every((e) => {
         const arrive = setToZero(e.arrive);
         const leave = setToZero(e.leave);
-        console.log((newArrive < arrive && newLeave < arrive) || newArrive > leave);
 
         return (newArrive < arrive && newLeave < arrive) || newArrive > leave;
       });
-      console.log(isFree);
 
       if (!isFree)
         return new ApiResponse(
@@ -182,6 +194,33 @@ class ReservationServices implements ReservationCRUD {
       apartment.reservations.push(newReservation);
       await apartment.save();
       return new ApiResponse();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async setPayed(id: string) {
+    try {
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
+      const reservation = await Reservation.findById(id).select(
+        "payed method customer.firstName customer.lastName arrive leave"
+      );
+
+      if (!reservation) return ApiResponse.withLocalize("Nincs ilyen foglalás", "Reservation not found!", 404);
+      if (reservation.method === "credit card")
+        return ApiResponse.withLocalize(
+          "Nem tudod átállítani a bankkártyás fizetések állapotát!",
+          "You can't modify the credit cards payment!"
+        );
+      reservation.payed = !reservation.payed;
+      await reservation.save();
+      return ApiResponse.withLocalize(
+        `Foglalás (${reservation.customer.lastName + " " + reservation.customer.firstName} ${
+          GetSimpleDateString(reservation.arrive) + "-" + GetSimpleDateString(reservation.leave)
+        } ) sikeresen átállítva ${reservation.payed ? "kifizetvére" : "nincs kifizetvére"}!`,
+        `Reservation (id: ${id}) is modifyed to ${reservation.payed ? "payed" : "not payed"}!`,
+        200
+      );
     } catch (error) {
       throw error;
     }

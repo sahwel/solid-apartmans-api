@@ -24,8 +24,7 @@ class ReservationController {
 
   async getFreeTimeEnd(req: Request, res: Response) {
     try {
-      const id = req.params.id;
-      const response = await ReservationServices.getFreeTimeEnd(id, req.query);
+      const response = await ReservationServices.getFreeTimeEnd(req.query);
       res.status(response.status).json(response.payload);
     } catch (error) {
       console.log(error);
@@ -37,6 +36,17 @@ class ReservationController {
     try {
       const id = req.params.id;
       const response = await ReservationServices.get(id);
+      res.status(response.status).json(response.payload);
+    } catch (error) {
+      console.log(error);
+      res.json(error);
+    }
+  }
+
+  async setPayed(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const response = await ReservationServices.setPayed(id);
       res.status(response.status).json(response.payload);
     } catch (error) {
       console.log(error);

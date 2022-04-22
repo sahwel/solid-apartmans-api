@@ -33,8 +33,6 @@ app.use(cors({ origin: "*" }));
 app.use(compression());
 
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
-console.log(__dirname);
-
 app.use("/admin", adminRoutes);
 app.use("/faq", faqRoutes);
 app.use("/facility", facilityRoutes);

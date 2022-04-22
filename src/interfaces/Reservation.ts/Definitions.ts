@@ -5,7 +5,8 @@ export interface ReservationCRUD {
   create: (id: string, data: CreateReservationDto) => Promise<ApiResponse>;
   getAdmin: (query: any) => Promise<ApiResponse>;
   get: (apartment: string) => Promise<ApiResponse>;
-  getFreeTimeEnd: (id: string, query: any) => Promise<ApiResponse>;
+  getFreeTimeEnd: (query: any) => Promise<ApiResponse>;
+  setPayed: (id: string) => Promise<ApiResponse>;
 }
 
 export interface CreateReservationDto extends ReservationBaseModel {
@@ -15,6 +16,7 @@ export interface CreateReservationDto extends ReservationBaseModel {
 export interface ReservationBaseModel {
   arrive: Date;
   leave: Date;
+  method: PaymentMethods;
   customer: {
     firstName: string;
     lastName: string;
@@ -45,3 +47,5 @@ export interface ReservationModel extends ReservationBaseModel {
   payed: boolean;
   review: Review;
 }
+
+export type PaymentMethods = "credit card" | "bank transfer";

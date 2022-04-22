@@ -6,10 +6,9 @@ import validateAdminToken from "../middlewares/ValidateAdminToken";
 const router = Router();
 
 router.post("/:id", ReservationController.makeReservation);
-
+router.get("/freeTimeEnd", ReservationController.getFreeTimeEnd);
 router.get("/admin/", validateAdminToken, getAdmin, ReservationController.getAdmin);
 router.get("/:id", ReservationController.get);
-
-router.get("/freeTimeEnd/:id", validateAdminToken, getAdmin, ReservationController.getFreeTimeEnd);
+router.patch("/:id", validateAdminToken, getAdmin, ReservationController.setPayed);
 
 export default router;

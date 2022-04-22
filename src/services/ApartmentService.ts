@@ -35,7 +35,7 @@ class ApartmentService implements ApartmentCrud {
 
   async addImages(id: string, imgs?: Express.Multer.File[]) {
     try {
-      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
       if (!imgs || imgs.length === 0)
         return new ApiResponse({
           msg: "Image(s) missing, please upload an image! (Hiányzó kép(ek), kérlek tölts fel legalább egy képet!)",
@@ -57,7 +57,7 @@ class ApartmentService implements ApartmentCrud {
 
   async update(id: string, data: ApartmentDto) {
     try {
-      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
       const dataValidation = validateApartment(data);
       if (dataValidation.error)
         return new ApiResponse(
@@ -85,7 +85,7 @@ class ApartmentService implements ApartmentCrud {
 
   async getAdmin(id: string) {
     try {
-      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
       const apartment = await Apartment.findById(id).select("-__v").populate({ path: "facilities", select: "-__v" });
 
       if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
@@ -97,7 +97,7 @@ class ApartmentService implements ApartmentCrud {
 
   async get(id: string) {
     try {
-      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
       const apartment = await Apartment.findById(id)
         .select("-__v") // todo: -reservations if it will exits
         .populate({ path: "facilities", select: "-__v -_id" })
@@ -136,7 +136,7 @@ class ApartmentService implements ApartmentCrud {
 
   async getBookDatas(id: string) {
     try {
-      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
       const apartment = await Apartment.findById(id).select("_id name address ");
       if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
 
@@ -148,7 +148,7 @@ class ApartmentService implements ApartmentCrud {
 
   async deleteImage(id: string, index: number) {
     try {
-      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
       const apartment = await Apartment.findById(id).select("images");
       if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
       if (index < 0 || index > apartment.images.length - 1)
@@ -172,7 +172,7 @@ class ApartmentService implements ApartmentCrud {
 
   async moveImg(id: string, index: number, isUp: boolean, toFirst: boolean) {
     try {
-      if (!id) return new ApiResponse({ msgEN: "Param id is required!", msgHU: "Paraméter id kötelező!" });
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
       const apartment = await Apartment.findById(id).select("images");
       if (!apartment) return new ApiResponse({ msgEN: "Apartment not found!", msgHU: "Apartman nem találató!" }, 404);
       if ((isUp || toFirst) && index === 0)
@@ -199,7 +199,6 @@ class ApartmentService implements ApartmentCrud {
   async getApartmentsNames() {
     try {
       const apartments = await Apartment.find().select("_id name");
-      console.log(apartments);
 
       return new ApiResponse({ apartments });
     } catch (error) {

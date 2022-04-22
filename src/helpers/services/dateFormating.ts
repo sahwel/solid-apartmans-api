@@ -2,7 +2,7 @@ export const setToZero = (date: string | Date) => {
   return new Date(new Date(new Date(date).setHours(0, 0, 0, 0)).toLocaleDateString());
 };
 
-export const GetSimpleDateString = (date: string | Date, lang: "hu" | "en") => {
+export const GetSimpleDateString = (date: string | Date, lang: "hu" | "en" = "hu") => {
   const { mm, dd, yyyy } = GetSimpleDate(date);
   return lang === "en" ? mm + "-" + dd + "-" + yyyy : yyyy + "-" + mm + "-" + dd;
 };

@@ -36,7 +36,7 @@ class FaqService implements FAQCRUD {
 
   async update(id: string, data: FaqDto) {
     try {
-      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
       const dataValidation = createEditFaqValidation(data);
       if (dataValidation.error)
         return new ApiResponse(
@@ -55,7 +55,7 @@ class FaqService implements FAQCRUD {
 
   async delete(id: string) {
     try {
-      if (!id) return new ApiResponse({ msg: "Param id is required! (Paraméter id kötelező!)" });
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
 
       await Faq.findByIdAndDelete(id);
       return new ApiResponse();

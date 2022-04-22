@@ -12,6 +12,7 @@ const reservationSchema = new mongoose.Schema<ReservationModel>({
     type: Date,
     required: true,
   },
+  method: { ...stringRequired, min: 1, default: "credit card" },
   apartment: { type: mongoose.Schema.Types.ObjectId, ref: "Apartment", required: true },
   review: { type: mongoose.Schema.Types.ObjectId, ref: "Review" },
   total: { ...numberRequired, min: 1 },
