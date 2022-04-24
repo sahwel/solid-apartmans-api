@@ -53,6 +53,21 @@ class ReservationController {
       res.json(error);
     }
   }
+
+  async getTotal(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const arrive = req.params.arrive as unknown as Date;
+      const leave = req.params.leave as unknown as Date;
+      const numbersOfAdults = req.params.numbersOfAdults as unknown as number;
+      const numbersOfChilds = req.params.numbersOfChilds as unknown as number;
+      const response = await ReservationServices.getTotalAsync(id, arrive, leave, numbersOfAdults, numbersOfChilds);
+      res.status(response.status).json(response.payload);
+    } catch (error) {
+      console.log(error);
+      res.json(error);
+    }
+  }
 }
 
 export default new ReservationController();

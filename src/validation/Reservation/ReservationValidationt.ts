@@ -19,7 +19,7 @@ const validateReservation = (data: CreateReservationDto) => {
         city: Joi.string().min(1).max(256).required().trim(),
         street: Joi.string().min(1).max(256).required().trim(),
         house_number: Joi.number().min(1).required(),
-        other: Joi.string().min(1).max(256).trim(),
+        other: Joi.string()..max(256).trim(),
       },
       numberOfAdults: Joi.number().min(1).required(),
       numberOfKids: Joi.number().min(0),

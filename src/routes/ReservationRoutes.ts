@@ -9,6 +9,7 @@ router.post("/:id", ReservationController.makeReservation);
 router.get("/freeTimeEnd", ReservationController.getFreeTimeEnd);
 router.get("/admin/", validateAdminToken, getAdmin, ReservationController.getAdmin);
 router.get("/:id", ReservationController.get);
+router.get("/total/:id/:arrive/:leave/:numbersOfAdults/:numbersOfChilds", ReservationController.get);
 router.patch("/:id", validateAdminToken, getAdmin, ReservationController.setPayed);
 
 export default router;

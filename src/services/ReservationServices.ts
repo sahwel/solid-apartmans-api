@@ -108,8 +108,10 @@ class ReservationServices implements ReservationCRUD {
 
       data.arrive = setToZero(data.arrive);
       data.leave = setToZero(data.leave);
+
       const newArrive = data.arrive;
       const newLeave = data.leave;
+      console.log(newArrive);
 
       if (!checkArriveDate(newArrive))
         return new ApiResponse({
@@ -221,6 +223,18 @@ class ReservationServices implements ReservationCRUD {
         `Reservation (id: ${id}) is modifyed to ${reservation.payed ? "payed" : "not payed"}!`,
         200
       );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getTotalAsync(id: string, arrive: Date, leave: Date, numbersOfAdults: number, numbersOfChilds: number) {
+    try {
+      if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
+      const apartment = await Apartment.findById(id).select("price plusPrice");
+
+      if (!apartment) return ApiResponse.withLocalize("Apartman nem található!", "Apartment not found!", 404);
+      return new ApiResponse({ total: getTotal(apartment, arrive, leave, numbersOfAdults, numbersOfChilds) });
     } catch (error) {
       throw error;
     }

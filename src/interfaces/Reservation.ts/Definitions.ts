@@ -7,6 +7,13 @@ export interface ReservationCRUD {
   get: (apartment: string) => Promise<ApiResponse>;
   getFreeTimeEnd: (query: any) => Promise<ApiResponse>;
   setPayed: (id: string) => Promise<ApiResponse>;
+  getTotalAsync: (
+    id: string,
+    arrive: Date,
+    leave: Date,
+    numbersOfAdults: number,
+    numbersOfChilds: number
+  ) => Promise<ApiResponse>;
 }
 
 export interface CreateReservationDto extends ReservationBaseModel {

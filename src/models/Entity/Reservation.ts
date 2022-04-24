@@ -30,7 +30,7 @@ const reservationSchema = new mongoose.Schema<ReservationModel>({
       city: { ...stringRequired, min: 1, max: 256 },
       street: { ...stringRequired, min: 1, max: 256 },
       house_number: { ...numberRequired, min: 1 },
-      other: { type: String, trim: true, min: 1, max: 256 },
+      other: { type: String, trim: true, max: 256 },
     },
     numberOfAdults: { ...numberRequired, min: 1 },
     numberOfKids: { ...numberRequired, min: 0 },
