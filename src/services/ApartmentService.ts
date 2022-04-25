@@ -137,7 +137,7 @@ class ApartmentService implements ApartmentCrud {
   async getBookDatas(id: string) {
     try {
       if (!id) return ApiResponse.withLocalize("Az id paraméter kötelező!", "The param id is required!");
-      const apartment = await Apartment.findById(id).select("_id name address ");
+      const apartment = await Apartment.findById(id).select("_id name address capacity.capacity");
       if (!apartment) return new ApiResponse({ msg: "Apartment not found! (Apartman nem találató!)" }, 404);
 
       return new ApiResponse(apartment);
